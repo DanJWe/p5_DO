@@ -1,24 +1,14 @@
-
-
-
-
-
-
-
-
-
-
-
+let prixTotal = 0
+let quantiteTotal = 0
 
 
 for (var i = 0; i < localStorage.length; i++) {
-
+    let data = [];
     const key = localStorage.key(i);
-    var data = JSON.parse(localStorage.getItem(key)); 
-    console.log(data)
+    data = JSON.parse(localStorage.getItem(key)); 
     
-            
-        
+    
+    
     fetch(`http://localhost:3000/api/products/${data.id}`)
     .then((res) => res.json())
     .then((apidata) => {
@@ -51,12 +41,10 @@ for (var i = 0; i < localStorage.length; i++) {
 
         //fonction supprimer un Article
         let getId = document.querySelectorAll(".deleteItem")
-        // console.log(getId)
 
         getId.forEach(element => {
             element.addEventListener("click", () => {
                 let articleDelete = element.closest(".cart__item")
-                // console.log(articleDelete)
                 let dataID = articleDelete.getAttribute("data-id");
                 let dataIdColor = articleDelete.getAttribute("data-color");
                 articleDelete.remove()
@@ -64,54 +52,42 @@ for (var i = 0; i < localStorage.length; i++) {
             })
         })
 
+        //fonction ecouter le changement de quantités et modifier le local storage
 
-        //fonction total quantité * prix
-        
-        
-        
-        
-        
+        let quantites = document.querySelectorAll(".itemQuantity")
 
-             function maFonctionTotal() {
-                let resultat = data.quantity * apidata.price
-               return resultat;
-             }
+        quantites.forEach(quantity => {
+            quantity.addEventListener("change", () => {
+                let articleParent = quantity.closest(".cart__item");
+                let dataID = articleParent.getAttribute("data-id");
+                let dataIdColor = articleParent.getAttribute("data-color");
+                let id = `${dataID}-${dataIdColor}`
+                const newData =`{"id":"${dataID}","color":"${dataIdColor}","quantity":${quantity.value}}`
+                localStorage.setItem(id, newData);
+                totalPrix();
+                totalQuantity();
+                location.reload()
+            })
             
-              let resTampon = [];
-              resTampon.push(maFonctionTotal());
-              console.log(resTampon);
-        
+        })
 
-        // console.log(maFonctionTotal())
+        //fonction calcul des quantités total et prix total
 
-        // var tableauTotal = []
-        // tableauTotal.push(maFonctionTotal ())
-        // console.log(tableauTotal)
+        function totalPrix(){
+            prixTotal = prixTotal + apidata.price * data.quantity
+            let totalPrice = document.querySelector('#totalPrice')
+            totalPrice.innerHTML = prixTotal
+        }
+        totalPrix()
 
-
-    
+        function totalQuantity(){
+            quantiteTotal = quantiteTotal + data.quantity
+            let totalQuantity = document.querySelector('#totalQuantity')
+            totalQuantity.innerHTML = quantiteTotal
+        }
+        totalQuantity()
 
     })  
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
- 
-
 

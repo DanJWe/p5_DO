@@ -34,7 +34,7 @@ const button = document.querySelector("#addToCart")
 button.addEventListener("click", handleClick)
 
 function handleClick() {
-  const color = document.querySelector("#colors").value // pour récupérer le value pour le total
+  const color = document.querySelector("#colors").value
   const quantity = document.querySelector("#quantity").value
 
   if (isOrderInvalid(color, quantity)) return
